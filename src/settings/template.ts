@@ -250,6 +250,41 @@ export function renderFolderPath(
 }
 
 /**
+ * 渲染独立文件模式下微信/企微消息的文件夹路径
+ */
+export function renderMessageFolderPath(
+    article: Article,
+    settings: PluginSettings
+): string {
+    if (!settings.messageFolder || !settings.messageFolder.trim()) {
+        return renderFolderPath(article, settings);
+    }
+
+    try {
+        const view = articleToView(article, settings);
+
+        const dateComponents = getDateComponents(article.savedAt);
+        const viewWithDate = {
+            ...view,
+            date: formatDate(article.savedAt, settings.messageFolderDateFormat),
+            ...dateComponents,
+        };
+
+        let path = Mustache.render(settings.messageFolder, viewWithDate);
+        path = path
+            .replace(/\\/g, '/')
+            .replace(/\/+/g, '/')
+            .replace(/^\//, '')
+            .replace(/\/$/, '');
+
+        return path;
+    } catch (error) {
+        logger.error('Message folder path rendering error:', error);
+        return renderFolderPath(article, settings);
+    }
+}
+
+/**
  * 渲染合并模式的文件夹路径
  */
 export function renderMergeFolderPath(

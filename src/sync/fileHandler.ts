@@ -12,6 +12,7 @@ import {
     renderWeChatMessage,
     renderFilename,
     renderFolderPath,
+    renderMessageFolderPath,
     renderMergeFolderPath,
     renderSingleFilename,
     renderFrontMatter,
@@ -219,7 +220,9 @@ export class FileHandler {
         }
 
         // 1. 先生成路径（提前计算，用于路径去重）
-        const folderPath = renderFolderPath(article, this.settings);
+        const folderPath = isWeChatMessage(article.title)
+            ? renderMessageFolderPath(article, this.settings)
+            : renderFolderPath(article, this.settings);
         const filename = sanitizeFileName(renderFilename(article, this.settings));
         const docPath = `${folderPath}/${filename}`;
 

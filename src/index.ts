@@ -82,6 +82,10 @@ const zhCN = {
     filename: "文件名模板",
     filenameDesc: "文件名格式（支持模板变量）",
     filenameDateFormat: "文件名日期格式",
+    messageFolder: "消息独立路径",
+    messageFolderDesc: "独立文件模式下微信/企微消息的保存文件夹（留空则与文章目标文件夹相同，支持模板变量）",
+    messageFolderDateFormat: "消息路径日期格式",
+    messageFolderDateFormatDesc: "用于消息独立路径中 {{{date}}} 变量的日期格式",
     singleFileName: "单文件模式文件名",
     singleFileDateFormat: "单文件日期格式",
     attachmentFolder: "附件文件夹",
@@ -468,8 +472,8 @@ export default class NoteHelperPlugin extends Plugin {
         this.loadNotebookOptions(settingsArea as HTMLElement);
 
         // 需要校验的字段映射
-        const templateFields = new Set(['folder', 'filename', 'mergeFolder', 'singleFileName', 'mergeFolderTemplate', 'template', 'wechatMessageTemplate', 'mergeMessageTemplate']);
-        const dateFormatFields = new Set(['folderDateFormat', 'filenameDateFormat', 'singleFileDateFormat', 'mergeFolderDateFormat', 'dateSavedFormat']);
+        const templateFields = new Set(['folder', 'filename', 'messageFolder', 'mergeFolder', 'singleFileName', 'mergeFolderTemplate', 'template', 'wechatMessageTemplate', 'mergeMessageTemplate']);
+        const dateFormatFields = new Set(['folderDateFormat', 'filenameDateFormat', 'messageFolderDateFormat', 'singleFileDateFormat', 'mergeFolderDateFormat', 'dateSavedFormat']);
         const numberFields: Record<string, { name: string; min: number; max: number; allowZero?: boolean }> = {
             frequency: { name: '同步频率（分钟）', min: 15, max: 1440, allowZero: true },
             jpegQuality: { name: 'JPEG 质量', min: 1, max: 100 },
@@ -477,11 +481,11 @@ export default class NoteHelperPlugin extends Plugin {
         };
 
         const fieldNameMap: Record<string, string> = {
-            folder: '文章文件夹', filename: '文件名', mergeFolder: '合并文件夹',
+            folder: '文章文件夹', filename: '文件名', messageFolder: '消息文件夹', mergeFolder: '合并文件夹',
             singleFileName: '单文件名', mergeFolderTemplate: '合并路径模板',
             template: '内容模板', wechatMessageTemplate: '企微消息模板',
             mergeMessageTemplate: '合并消息模板',
-            folderDateFormat: '文件夹日期格式', filenameDateFormat: '文件名日期格式',
+            folderDateFormat: '文件夹日期格式', filenameDateFormat: '文件名日期格式', messageFolderDateFormat: '消息文件夹日期格式',
             singleFileDateFormat: '单文件日期格式', mergeFolderDateFormat: '合并文件夹日期格式',
             dateSavedFormat: '保存日期格式',
         };

@@ -220,6 +220,26 @@ export class SettingsForm {
                     <div class="b3-label__text">${i18n.filenameDesc}<br/><span style="color: var(--b3-theme-on-surface-light);">时间变量：{{{date}}}, {{{year}}}, {{{month}}}, {{{day}}}, {{{hour}}}, {{{minute}}}, {{{second}}}, {{{weekday}}}, {{{quarter}}}</span></div>
                 </div>
 
+                <div class="b3-label">
+                    <div class="fn__flex">
+                        <span class="fn__flex-1">${i18n.messageFolder || '消息独立路径'}</span>
+                    </div>
+                    <div class="fn__flex">
+                        <input class="b3-text-field fn__flex-1" id="messageFolder" value="${settings.messageFolder}" />
+                    </div>
+                    <div class="b3-label__text">${i18n.messageFolderDesc || '独立文件模式（不合并）下微信/企微消息的保存文件夹；留空则与文章目标文件夹相同'}<br/><span style="color: var(--b3-theme-on-surface-light);">时间变量：{{{date}}}, {{{year}}}, {{{month}}}, {{{day}}}, {{{hour}}}, {{{minute}}}, {{{second}}}, {{{weekday}}}, {{{quarter}}}</span></div>
+                </div>
+
+                <div class="b3-label">
+                    <div class="fn__flex">
+                        <span class="fn__flex-1">${i18n.messageFolderDateFormat || '消息路径日期格式'}</span>
+                    </div>
+                    <div class="fn__flex">
+                        <input class="b3-text-field fn__flex-1" id="messageFolderDateFormat" value="${settings.messageFolderDateFormat}" />
+                    </div>
+                    <div class="b3-label__text">${i18n.messageFolderDateFormatDesc || '用于消息独立路径中 {{{date}}} 变量的日期格式'}</div>
+                </div>
+
                 <div class="fn__hr"></div>
 
                 <!-- 合并消息设置 -->
@@ -498,6 +518,8 @@ export class SettingsForm {
         const targetNotebookSelect = container.querySelector('#targetNotebook') as HTMLSelectElement;
         const folderInput = container.querySelector('#folder') as HTMLInputElement;
         const filenameInput = container.querySelector('#filename') as HTMLInputElement;
+        const messageFolderInput = container.querySelector('#messageFolder') as HTMLInputElement;
+        const messageFolderDateFormatInput = container.querySelector('#messageFolderDateFormat') as HTMLInputElement;
         const mergeFolderTemplateInput = container.querySelector('#mergeFolderTemplate') as HTMLInputElement;
         const mergeMessageTemplateInput = container.querySelector('#mergeMessageTemplate') as HTMLTextAreaElement;
 
@@ -553,6 +575,8 @@ export class SettingsForm {
         if (targetNotebookSelect) values.targetNotebook = targetNotebookSelect.value;
         if (folderInput) values.folder = folderInput.value;
         if (filenameInput) values.filename = filenameInput.value;
+        if (messageFolderInput) values.messageFolder = messageFolderInput.value;
+        if (messageFolderDateFormatInput) values.messageFolderDateFormat = messageFolderDateFormatInput.value;
         if (mergeFolderTemplateInput) values.mergeFolderTemplate = mergeFolderTemplateInput.value;
         if (mergeMessageTemplateInput) values.mergeMessageTemplate = mergeMessageTemplateInput.value;
         if (singleFileNameInput) values.singleFileName = singleFileNameInput.value;

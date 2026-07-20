@@ -59,6 +59,8 @@ export interface PluginSettings {
     folderDateFormat: string;  // 文件夹日期格式
     filename: string;  // 文件名模板
     filenameDateFormat: string;  // 文件名日期格式
+    messageFolder: string;  // 消息独立文件夹路径模板（独立文件模式下微信/企微消息；留空 = 与文章 folder 相同）
+    messageFolderDateFormat: string;  // 消息独立文件夹的 {{{date}}} 日期格式
     mergeFolder: string;  // 合并模式的目标文件夹（独立于普通文章）
     mergeFolderDateFormat: string;  // 合并模式的文件夹日期格式
     mergeFolderTemplate: string;  // 合并消息路径模板（用户可自定义）
@@ -126,6 +128,8 @@ export const DEFAULT_SETTINGS: PluginSettings = {
     folderDateFormat: 'yyyy-MM-dd',
     filename: '{{{title}}}',
     filenameDateFormat: 'yyyy-MM-dd',
+    messageFolder: '',  // 空 = 回退到 folder（向后兼容，不移动既有消息）
+    messageFolderDateFormat: 'yyyy-MM-dd',
     mergeFolder: '笔记同步助手/微信消息/{{{date}}}',  // 合并文件单独存放
     mergeFolderDateFormat: 'yyyy-MM',  // 按月分组
     mergeFolderTemplate: '笔记同步助手/微信消息/{{{date}}}',  // 用户可自定义的路径模板
