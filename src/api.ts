@@ -7,7 +7,7 @@ import { logger } from './utils/logger';
 import { Article } from './utils/types';
 
 // 备用 GraphQL 端点
-const FALLBACK_GRAPHQL_ENDPOINT = 'https://siyuanwc.130715.xyz/graphql';
+const FALLBACK_GRAPHQL_ENDPOINT = 'https://siyuanwc.130715.xyz/api/graphql';
 
 // GraphQL 响应接口
 interface GraphQLResponse<T> {
