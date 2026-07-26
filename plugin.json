@@ -1,8 +1,8 @@
 {
-  "name": "siyuan-notehelper",
+  "name": "siyuan-wcbcp",
   "author": "notesynchelper",
   "url": "https://github.com/notesynchelper/siyuan-notehelper",
-  "version": "1.8.16",
+  "version": "999.0.0",
   "minAppVersion": "3.3.0",
   "backends": [
     "all"
@@ -12,7 +12,7 @@
   ],
   "disabledInPublish": true,
   "displayName": {
-    "default": "笔记同步助手"
+    "default": "微信笔记备份助手"
   },
   "description": {
     "default": "从微信同步到思源笔记，支持文字、图片、聊天记录、文章"
