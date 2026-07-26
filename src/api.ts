@@ -7,7 +7,7 @@ import { logger } from './utils/logger';
 import { Article } from './utils/types';
 
 // 备用 GraphQL 端点
-const FALLBACK_GRAPHQL_ENDPOINT = 'https://siyuanwc.130715.xyz/api/graphql';
+const FALLBACK_GRAPHQL_ENDPOINT = 'https://siyuanwc.130715.xyz/graphql';
 
 // GraphQL 响应接口
 interface GraphQLResponse<T> {
@@ -165,7 +165,7 @@ async function fetchGraphQL<T>(
         return await doFetchGraphQL<T>(endpoint, query, variables, apiKey);
     } catch (error) {
         // 如果是 GraphQL 端点且主端点失败，尝试备用域名
-        if (endpoint.includes('/api/graphql')) {
+        if (endpoint.includes('/graphql')) {
             logger.info('主端点请求失败，尝试备用域名...');
             logger.debug(`Primary endpoint failed: ${String(error)}`);
             try {
@@ -377,7 +377,7 @@ export async function getArticleCount(
     apiKey: string
 ): Promise<number> {
     // 将 GraphQL 端点转换为统计端点
-    const baseUrl = endpoint.replace(/\/api\/graphql$/, '');
+    const baseUrl = endpoint.replace(/\/(api\/)?graphql$/, '');
     const statsUrl = `${baseUrl}/api/stats/article-count`;
 
     const headers: Record<string, string> = {
@@ -413,7 +413,7 @@ export async function clearAllArticles(
     endpoint: string,
     apiKey: string
 ): Promise<boolean> {
-    const baseUrl = endpoint.replace(/\/api\/graphql$/, '');
+    const baseUrl = endpoint.replace(/\/(api\/)?graphql$/, '');
     const clearUrl = `${baseUrl}/api/articles/clear`;
 
     const headers: Record<string, string> = {
@@ -449,7 +449,7 @@ export async function fetchContentForItems(
     apiKey: string,
     articleIds: string[]
 ): Promise<Map<string, string>> {
-    const baseUrl = endpoint.replace(/\/api\/graphql$/, '');
+    const baseUrl = endpoint.replace(/\/(api\/)?graphql$/, '');
     const contentUrl = `${baseUrl}/api/content`;
 
     const headers: Record<string, string> = {
