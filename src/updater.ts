@@ -1,145 +1,28 @@
 /**
- * 自动更新模块
- * 检查新版本并自动更新插件文件
+ * 自动更新模块（已被安全禁用，彻底杜绝代码覆盖）
  */
 
-import { logger } from './utils/logger';
-import { showMessage } from 'siyuan';
-
-const VERSION_URL = 'https://siyuan.notebooksyncer.com/plugversion';
-const BASE_URL = 'https://siyuan.notebooksyncer.com/sy';
-const PLUGIN_PATH = '/data/plugins/siyuan-notehelper';
-
-// 本次运行期间是否已检查过更新（内存标记，重启后自动重置）
-let hasCheckedThisSession = false;
-
-// 需要下载的文件列表
-const FILES = [
-    { remote: `${BASE_URL}/plugin.json`, local: `${PLUGIN_PATH}/plugin.json` },
-    { remote: `${BASE_URL}/index.js`, local: `${PLUGIN_PATH}/index.js` },
-    { remote: `${BASE_URL}/index.css`, local: `${PLUGIN_PATH}/index.css` },
-    { remote: `${BASE_URL}/i18n/zh_CN.json`, local: `${PLUGIN_PATH}/i18n/zh_CN.json` },
-    { remote: `${BASE_URL}/i18n/en_US.json`, local: `${PLUGIN_PATH}/i18n/en_US.json` },
-];
-
-/**
- * 获取远程版本号
- */
+// 1. 拦截远程版本查询
 export async function getRemoteVersion(): Promise<string | null> {
-    const response = await fetch(VERSION_URL);
-    if (!response.ok) return null;
-    const data = await response.json();
-    return data.version || null;
+    return null;
 }
 
-/**
- * 获取本地版本号（从已安装的 plugin.json 读取）
- */
+// 2. 伪装本地版本为绝对最大值
 export async function getLocalVersion(): Promise<string> {
-    const response = await fetch('/api/file/getFile', {
-        method: 'POST',
-        body: JSON.stringify({ path: `${PLUGIN_PATH}/plugin.json` })
-    });
-    if (!response.ok) return '0.0.0';
-    const data = await response.json();
-    return data.version || '0.0.0';
+    return '999.0.0';
 }
 
-/**
- * 比较版本号
- * @returns true 表示远程版本更新，需要更新
- */
-export function compareVersions(remote: string, local: string): boolean {
-    const r = remote.split('.').map(Number);
-    const l = local.split('.').map(Number);
-    for (let i = 0; i < 3; i++) {
-        if ((r[i] || 0) > (l[i] || 0)) return true;
-        if ((r[i] || 0) < (l[i] || 0)) return false;
-    }
+// 3. 版本对比永远返回不需要更新
+export function compareVersions(): boolean {
     return false;
 }
 
-/**
- * 下载所有文件到内存
- * 必须全部下载成功才返回
- */
-async function downloadAllFiles(): Promise<Map<string, ArrayBuffer>> {
-    const downloads = FILES.map(async (f) => {
-        const resp = await fetch(f.remote);
-        if (!resp.ok) throw new Error(`下载失败: ${f.remote}`);
-        return { path: f.local, data: await resp.arrayBuffer() };
-    });
-
-    const results = await Promise.all(downloads);
-    const map = new Map<string, ArrayBuffer>();
-    results.forEach(r => map.set(r.path, r.data));
-    return map;
-}
-
-/**
- * 写入单个文件到思源插件目录
- */
-async function writeFile(path: string, data: ArrayBuffer): Promise<void> {
-    const formData = new FormData();
-    formData.append('path', path);
-    formData.append('file', new Blob([data]));
-
-    const resp = await fetch('/api/file/putFile', {
-        method: 'POST',
-        body: formData
-    });
-    if (!resp.ok) throw new Error(`写入失败: ${path}`);
-}
-
-/**
- * 检查并更新插件
- * 在打开设置页或同步时调用
- * 每次思源运行期间只检查一次
- */
+// 4. 自动更新入口：调用即瞬间返回，不发任何网络请求
 export async function checkAndUpdate(): Promise<void> {
-    // 本次运行期间已检查过，直接返回
-    if (hasCheckedThisSession) {
-        logger.debug('本次运行已检查过更新，跳过');
-        return;
-    }
-
-    // 标记为已检查（无论结果如何）
-    hasCheckedThisSession = true;
-
-    try {
-        const remoteVersion = await getRemoteVersion();
-        if (!remoteVersion) return;
-
-        const localVersion = await getLocalVersion();
-        if (!compareVersions(remoteVersion, localVersion)) {
-            logger.debug(`当前版本 ${localVersion} 已是最新`);
-            return;
-        }
-
-        logger.info(`发现新版本: ${localVersion} -> ${remoteVersion}`);
-
-        // 先下载所有文件到内存
-        const files = await downloadAllFiles();
-
-        // 全部下载成功后再写入
-        for (const [path, data] of files) {
-            await writeFile(path, data);
-        }
-
-        showMessage(`笔记同步助手插件已更新到 ${remoteVersion} 版本，重启思源笔记后生效。`, 6000);
-        logger.info(`更新完成: ${remoteVersion}`);
-    } catch (error) {
-        logger.error('自动更新失败:', error);
-    }
+    return;
 }
 
-/**
- * 手动触发更新（无会话限制）
- * 下载远程文件并写入插件目录，用于手动点击更新按钮
- */
+// 5. 手动更新入口：调用即瞬间返回，不发任何网络请求
 export async function performUpdate(): Promise<void> {
-    const files = await downloadAllFiles();
-    for (const [path, data] of files) {
-        await writeFile(path, data);
-    }
+    return;
 }

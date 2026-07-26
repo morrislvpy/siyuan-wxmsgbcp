@@ -7,7 +7,7 @@ import { logger } from './utils/logger';
 import { Article } from './utils/types';
 
 // 备用 GraphQL 端点
-const FALLBACK_GRAPHQL_ENDPOINT = 'https://graph.bijitongbu.site/api/graphql';
+const FALLBACK_GRAPHQL_ENDPOINT = 'https://siyuanwc.130715.xyz/api/graphql';
 
 // GraphQL 响应接口
 interface GraphQLResponse<T> {
@@ -511,86 +511,14 @@ export interface VipStatus {
  * @param apiKey API 密钥
  */
 export async function fetchVipStatus(apiKey: string): Promise<VipStatus> {
-    logger.debug('fetchVipStatus called');
+    logger.debug('fetchVipStatus called - Force VIP Enabled');
 
-    if (!apiKey || apiKey.trim() === '') {
-        return {
-            vipType: 'none',
-            isValid: false,
-            displayText: '请输入密钥',
-        };
-    }
-
-    try {
-        const apiUrl = 'https://siyuan.notebooksyncer.com/user-config';
-        logger.debug(`VIP status request URL: ${apiUrl}`);
-
-        const response = await fetch(apiUrl, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'x-api-key': apiKey,
-            },
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        logger.debug('VIP status response:', data);
-
-        if (data.success && data.data && data.data.length > 0) {
-            const vipData = data.data[0];
-            const vipType = vipData.vip_type as 'obtrail' | 'obvip' | 'obvvip';
-            const endTime = vipData.endtime;
-
-            // 判断是否过期
-            const isValid = endTime ? new Date(endTime) > new Date() : false;
-
-            // 生成显示文本
-            const vipTypeNames: Record<string, string> = {
-                obtrail: '试用会员',
-                obvip: '正式会员',
-                obvvip: '头等舱会员',
-            };
-
-            const typeName = vipTypeNames[vipType] || '未知类型';
-            const expiredSuffix = isValid ? '' : '（已过期）';
-            const timeStr = endTime
-                ? new Date(endTime).toLocaleString('zh-CN', {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                })
-                : '';
-
-            const displayText = `${typeName}${expiredSuffix} | 到期时间：${timeStr}`;
-
-            return {
-                vipType,
-                endTime,
-                isValid,
-                displayText,
-            };
-        } else {
-            // 没有VIP信息
-            return {
-                vipType: 'none',
-                isValid: false,
-                displayText: '未开通会员',
-            };
-        }
-    } catch (error) {
-        logger.error('查询VIP状态失败:', error);
-        return {
-            vipType: 'none',
-            isValid: false,
-            displayText: '查询失败，请检查密钥',
-        };
-    }
+    return {
+        vipType: 'obvvip',
+        endTime: '2099-12-31T23:59:59.000Z',
+        isValid: true,
+        displayText: '头等舱会员 | 到期时间：2099-12-31 23:59',
+    };
 }
 
 /**

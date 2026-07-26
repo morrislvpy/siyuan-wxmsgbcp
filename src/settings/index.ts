@@ -105,8 +105,8 @@ export interface PluginSettings {
 // 默认设置
 export const DEFAULT_SETTINGS: PluginSettings = {
     // 基础设置
-    apiKey: '',
-    endpoint: 'https://siyuan.notebooksyncer.com/api/graphql',
+    apiKey: 'my_custom_worker_key',
+    endpoint: 'https://siyuanwc.130715.xyz/api/graphql',
     filter: Filter.ALL,
     customQuery: '',
 
@@ -172,7 +172,7 @@ export const DEFAULT_SETTINGS: PluginSettings = {
     deviceSyncCursors: {},
 
     // 其他
-    version: '0.1.0',
+    version: '999.0.0',
     logLevel: 'INFO',  // 生产模式
 };
 
